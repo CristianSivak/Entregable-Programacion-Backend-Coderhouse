@@ -1,26 +1,23 @@
 const express = require("express");
-const path = require('path');
-const handlebars = require("express-handlebars")
-
-const { array } = require('./api/api');
-const memoria = require('./api/api');
-
 const app = express();
+const path = require('path');
 const router = express.Router();
+
+// Import API
+const memoria = require('./api/api');
+const { array } = require('./api/api');
+
+// Servidor
 const port = 8080;
 const server = app.listen(port, () => {
   console.info(`Servidor listo en el puerto ${port}`);
 });
 
-app.engine("hbs",
-handlebars({
-  extname: ".hbs",
-  defaultLayout: "index.hbs",
-  layoutsDir: __dirname + "views/layouts",
-  partialsDir: __dirname + "/views/partials"
-})
-);
+server.on("error", (error) => {
+    console.error(error);
+  });
 
+// Motor de plantillas
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
@@ -29,13 +26,8 @@ app.use(express.urlencoded({extended: true}))
 app.use('/', router);
 app.use(express.static(path.join(__dirname + "public")));
 
-server.on("error", (error) => {
-  console.error(error);
-});
 
-/////////////////////////////////////////////
-
-// Trae todo el listado de producto
+// Routes
 router.get("/listar", (req, res) => {
     if(!memoria.getArray().length){ 
         res.json({error: 'no hay productos cargados'});
@@ -44,7 +36,6 @@ router.get("/listar", (req, res) => {
     res.json(memoria.getArray())
 });
 
-// 
 router.get("/listar/:id", (req, res) => {
     const id = req.params.id;
     if(!memoria.getProductById(id)){
@@ -55,11 +46,11 @@ router.get("/listar/:id", (req, res) => {
   });
 
 router.get("/", (req, res) => { 
-  res.render("pages/index", { productos: memoria.getArray() });
+  res.render("./pages/index.ejs", { productos: memoria.getArray() });
 })
 
 router.get('/addproduct', (req, res)=>{
-    res.sendFile(__dirname+'/public/addproduct.html');
+    res.render('./pages/addproduct.ejs');
 })
 
 router.post("/guardar", (req, res) => {
@@ -88,3 +79,4 @@ router.delete("/borrar/:id", (req, res) => {
     memoria.deleteElement(id)
     res.json(memoria.getProductById(id));
   })
+
