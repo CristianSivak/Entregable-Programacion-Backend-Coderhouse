@@ -1,27 +1,20 @@
-html
-    head 
-        meta(charset="UTF-8")
-        meta(name="viewport" content="width=device-width, initial-scale=1.0")
-        meta(http-equiv="X-UA-Compatible" content="ie=edge")
-        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css")
-        title Entregable - Pug
-    
-    body
-        h1 Vista de productos
-
-        table(class="table table-stripped")
-            tr 
-                th ID
-                th Nombre
-                th Precio
-                th Foto 
-            
-            each producto in productos
-                tr 
-                    th= producto.id 
-                    th= producto.title
-                    th= producto.price 
-                    th 
-                        img(src=producto.thumbnail)
-            else
-                th(class="alert alert-warning") No hay productos
+extends layouts/main.pug
+block content
+    if productos
+        table(class="table")
+            head
+                tr
+                    th #
+                    th Title
+                    th Price
+                    th Thumbnail
+                tr
+            body
+                each producto in productos
+                    tr
+                        td=producto.id
+                        td=producto.title
+                        td=producto.price
+                        td: img(src=producto.thumbnail width="30")/
+    else if error
+        div(class="alert"): strong=error

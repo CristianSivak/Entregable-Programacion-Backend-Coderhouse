@@ -1,0 +1,17 @@
+extends layouts/main.pug
+block content
+  body  
+      h2  Crear producto
+      div.box
+        form(action="/guardar" method="POST")
+          h2 Ingresar producto
+          div.form-group
+            label Titulo
+            input(name="title" type="text").form-control
+          div.form-group
+            label Precio
+            input(name="price" type="text").form-control  
+          div.form-group
+            label thumbnail
+            input(name="thumbnail" type="text").form-control 
+          button.btn.btn-success Enviar
